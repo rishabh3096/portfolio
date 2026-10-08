@@ -41,7 +41,9 @@ export function initFooter({ root, covers, reduced }) {
     return s;
   });
 
-  const items = SLOTS.slice(0, Math.min(SLOTS.length, covers.length)).map(([x, y, w], i) => {
+  // phones hide the gallery (css .contact__space), so don't build or animate it there
+  const gallery = !window.matchMedia('(max-width: 900px)').matches;
+  const items = (gallery ? SLOTS : []).slice(0, Math.min(SLOTS.length, covers.length)).map(([x, y, w], i) => {
     const img = document.createElement('img');
     img.src = covers[i % covers.length];
     img.alt = '';

@@ -47,6 +47,9 @@ export class Stage {
   }
 
   resize() {
+    // phones fire resize every time the address bar slides in or out; a full-screen render target per
+    // event used to pile up GPU memory until iOS killed the tab, so skip no-op resizes and free the old one
+    if (this.W === window.innerWidth && this.H === window.innerHeight && this.target) return;
     this.W = window.innerWidth;
     this.H = window.innerHeight;
     this.renderer.setSize(this.W, this.H);
@@ -61,6 +64,12 @@ export class Stage {
     // offscreen target matches the canvas in device pixels so refraction lines up 1:1
     this.pxW = Math.round(this.W * this.dpr);
     this.pxH = Math.round(this.H * this.dpr);
+    if (this.target) {
+      const gl = this.gl;
+      (this.target.textures || [this.target.texture]).forEach((t) => gl.deleteTexture(t.texture || t));
+      gl.deleteFramebuffer(this.target.buffer);
+      if (this.target.depthBuffer) gl.deleteRenderbuffer(this.target.depthBuffer);
+    }
     this.target = new RenderTarget(this.gl, {
       width: this.pxW,
       height: this.pxH,
@@ -85,11 +94,13 @@ export class Stage {
     this.velocity += (raw - this.velocity) * 0.12;
 
     let bgVisible = false;
+    let any = false;
     for (const item of this.items) {
       const rect = item.el.getBoundingClientRect();
       const onscreen = rect.bottom > -80 && rect.top < this.H + 80 && rect.width > 0;
       item.mesh.visible = onscreen && item.ready;
       if (!item.mesh.visible) continue;
+      any = true;
       if (item.layer === 'bg') bgVisible = true;
 
       item.mesh.scale.set(rect.width, rect.height, 1);
@@ -101,6 +112,13 @@ export class Stage {
       item.update(rect, this);
     }
 
+    // nothing on screen: clear once, then stop drawing until something comes back
+    if (!any) {
+      if (this._drewLast) this.renderer.render({ scene: this.scene, camera: this.camera });
+      this._drewLast = false;
+      return;
+    }
+    this._drewLast = true;
     if (bgVisible) this.renderer.render({ scene: this.bgScene, camera: this.camera, target: this.target, clear: true });
     this.renderer.render({ scene: this.scene, camera: this.camera });
   }

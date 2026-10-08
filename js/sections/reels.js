@@ -50,8 +50,21 @@ export function initReels({ root, reels, reduced }) {
         playBadge.innerHTML = PLAY;
         card.classList.remove('is-playing');
       };
-      card.addEventListener('pointerenter', play);
-      card.addEventListener('pointerleave', pause);
+      // mouse: hover plays. Touch: pointerenter/leave fire on finger down/up, so a tap toggles instead.
+      card.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && play());
+      card.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && pause());
+      let lastType = 'mouse'; // from pointerdown: some browsers' click events don't carry pointerType
+      card.addEventListener('pointerdown', (e) => (lastType = e.pointerType));
+      card.addEventListener('click', (e) => {
+        if (lastType === 'mouse' || card.tagName === 'A') return; // linked cards keep their link
+        e.preventDefault();
+        if (video.paused) {
+          // one video at a time
+          document.querySelectorAll('.reel.is-playing').forEach((c) => c !== card && c.dispatchEvent(new CustomEvent('reel:pause')));
+          play();
+        } else pause();
+      });
+      card.addEventListener('reel:pause', pause);
       muteBtn?.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();

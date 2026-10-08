@@ -34,6 +34,9 @@ import {
 const gsap = window.gsap;
 const page = document.body.dataset.page || 'home';
 const reduced = prefersReducedMotion();
+// phones and tablets: native touch scrolling runs ahead of requestAnimationFrame, so anything drawn in WebGL
+// at a DOM element's position drifts while you scroll. Those devices get plain images instead.
+const touch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 const arrivedByTransition = document.documentElement.classList.contains('pt-in'); // came from another page of this site
 document.documentElement.classList.add('js');
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -200,7 +203,7 @@ function initHome() {
 
     const media = card.querySelector('.card__media');
     const meta = card.querySelector('.card__meta');
-    if (stage) {
+    if (stage && !touch) {
       const plane = stage.add(new CardPlane(stage, media, p.cover));
       if (reduced) plane.reveal.value = 1;
       else onceVisible(media, () => gsap.to(plane.reveal, { value: 1, duration: 1.6, ease: 'expo.out' }), 0.18);

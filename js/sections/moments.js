@@ -25,8 +25,15 @@ export function initMoments({ root, items, reduced }) {
     // reels play on hover, over their cover frame
     const v = a.querySelector('video');
     if (v) {
-      a.addEventListener('pointerenter', () => { v.play().catch(() => {}); a.classList.add('is-playing'); });
-      a.addEventListener('pointerleave', () => { v.pause(); a.classList.remove('is-playing'); });
+      const on = () => { v.play().catch(() => {}); a.classList.add('is-playing'); };
+      const off = () => { v.pause(); a.classList.remove('is-playing'); };
+      if (fine) {
+        a.addEventListener('pointerenter', on);
+        a.addEventListener('pointerleave', off);
+      } else {
+        // touch: no hover, so play while the card is on screen
+        new IntersectionObserver(([e]) => (e.isIntersecting ? on() : off()), { threshold: 0.6 }).observe(a);
+      }
     }
     // spring state per property: [value, velocity]
     return { el: a, x: [0, 0], y: [0, 0], r: [BASE_ROT[i % BASE_ROT.length], 0], s: [1, 0], base: BASE_ROT[i % BASE_ROT.length], cx: 0 };
