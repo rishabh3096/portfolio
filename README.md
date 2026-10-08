@@ -1,0 +1,80 @@
+# Rishabh Yadav: portfolio
+
+Static site. No build step, no `npm`. Native ES modules, with GSAP, Lenis and OGL vendored in `vendor/`.
+
+## Run
+
+```bash
+cd portfolio
+python3 serve.py        # http://localhost:5173  (no-cache, so edits show on refresh)
+```
+
+## Where things live
+
+| To change…                         | Edit                                                  |
+| ---------------------------------- | ----------------------------------------------------- |
+| Email, links, reel paths           | `js/config.js`                                        |
+| Projects, order, tiers, tags       | `js/data/projects.js`                                 |
+| Experience list (About)            | `js/data/projects.js` → `experience`                  |
+| Colours, type, spacing, motion     | `:root` tokens at the top of `css/main.css`           |
+| Hero background (liquid chrome)    | `js/gl/heroBackground.js` (the `flow` shader)         |
+| Glass logo (refraction, lights)    | `js/gl/glassLogo.js`, `js/gl/logoMask.js`; art at `assets/logo.png` |
+| Selected-work card shader          | `js/gl/cardPlane.js`                                  |
+| More-work 3D cylinder              | `js/carousel.js` (+ `.carousel`/`.tile` in `css/main.css`) |
+| Opening sequence (glass + greetings)| `js/preloader.js` (+ `.preloader` in `css/main.css`)  |
+| Scroll depth + page transitions    | `js/depth.js`, `js/transitions.js`                    |
+| Hero lines (left / right of logo)  | `.hero__stage` in `index.html`                        |
+| About text (first person)          | `.intro__text` in `index.html`                        |
+| Nav + footer                       | `js/chrome.js`                                        |
+
+## Adding the showreel
+1. Put the full reel at `assets/reel/showreel.mp4` (and optionally `poster.jpg`).
+2. In `js/config.js` set `reel: 'assets/reel/showreel.mp4'`. The placeholder frame is replaced.
+
+## Case studies on-site
+`frex.html` is the first: a short intro on the dark backdrop, then the Behance layout as one white sheet.
+Images are in `assets/frex`, numbered by their position in the Behance project (`15-03` = third image of the grid in block 15).
+Grids are `.cs__grid` > `.cs__row`; each image's width in a row follows its `--ar` aspect ratio, so rows stay equal height.
+Use `<body data-page="case">` for a new one (logo-only nav, About backdrop).
+
+## Moving a project on-site (instead of Behance)
+In `js/data/projects.js` set that project's `caseStudy` to a page path, for example `'work/smart-ring.html'`.
+The card then links internally and drops the "opens Behance" behaviour. Everything else stays the same.
+
+## Showreel (removed for now)
+The Showreel section was taken out of `index.html`; the hero button now points at Selected work. To bring it back,
+add a `<section id="reel">` with a `.reel__frame` (see git history / earlier README) and set `reel` in `js/config.js`.
+`initReel()` and the timecode in `js/main.js` are still there and do nothing while the markup is absent.
+
+## Experience (About page)
+Content is in `js/data/experience.js` (text taken from the CV). Add an `image` to a row to get the floating hover preview.
+
+## Footer
+The immersive footer is `js/chrome.js` (markup) + `js/sections/footer.js` (3D gallery and scroll reveal) + `.contact`/`.fglass` in `css/main.css`.
+
+## Social sections (Reels / From the feed / On the decks)
+All content lives in `js/data/social.js`.
+- **Reels:** five placeholder cards. Add `video` (mp4 in `assets/reels/`) and `poster` per reel to turn one on; it plays on hover.
+- **From the feed:** four stand-in frames from @rishhh.x in `assets/instagram/`. Swap the images and `url`s.
+- **On the decks:** a glass player around a YouTube embed (`dj.id`). The YouTube script only loads when the section is near the screen.
+
+## Resume
+Put the PDF in `assets/` as `Resume - Rishabh Yadav.pdf` and set `resume: 'assets/Resume - Rishabh Yadav.pdf'` in `js/config.js`.
+A "Resume ↓" link then appears in the footer. Leave it `null` to hide the link.
+
+## Type
+Switzer (free, via Fontshare CDN) stands in for Neue Haas Grotesk, which Avec Anni uses but is a paid Monotype font.
+If you have a Neue Haas licence, drop the files in `assets/fonts/`, add an `@font-face`, and put it first in `--f` in `css/main.css`.
+
+## Swapping the logo
+Replace `assets/logo.png` (dark glyph on transparent or white). `logoMask.js` auto-crops it and builds the height map.
+
+## Deploy
+Any static host: Vercel, Netlify, Cloudflare Pages or GitHub Pages. Upload the `portfolio/` folder as-is.
+`404.html` is picked up automatically on Netlify, Vercel and GitHub Pages.
+
+## Open TODOs
+- `config.email` is a placeholder. Set the address you want public.
+- Bio and portrait on `about.html` are placeholders.
+- `og:image` for link previews (1200×630).
+- Project tags are derived from the Behance titles. Edit if they're wrong.
