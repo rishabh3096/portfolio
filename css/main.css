@@ -342,7 +342,7 @@ main,
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(135% 62% at -8% 0%, rgba(206, 203, 198, 0.66) 0%, rgba(168, 160, 150, 0.42) 52%, rgba(120, 110, 100, 0.22) 60%, rgba(10, 10, 11, 0) 63%),
+    radial-gradient(120% 56% at 8% 14%, rgba(206, 203, 198, 0.66) 0%, rgba(168, 160, 150, 0.42) 52%, rgba(120, 110, 100, 0.22) 60%, rgba(10, 10, 11, 0) 63%),
     radial-gradient(60% 40% at 100% 100%, rgba(120, 120, 125, 0.16), transparent 70%),
     var(--ink);
 }
@@ -357,6 +357,22 @@ main,
 @keyframes logo-sheen {
   0%, 100% { -webkit-mask-position: 100% 100%; mask-position: 100% 100%; }
   50% { -webkit-mask-position: 0% 0%; mask-position: 0% 0%; }
+}
+/* the arc drifts slowly, like the WebGL flow: a transform on an oversized layer, so it stays on the GPU
+   compositor and costs nothing per frame */
+.no-gl .hero::before {
+  inset: -18%;
+  animation: arc-drift 11s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes arc-drift {
+  0% { transform: translate3d(-6%, -4%, 0) rotate(-7deg) scale(1); }
+  50% { transform: translate3d(5%, 3%, 0) rotate(5deg) scale(1.08); }
+  100% { transform: translate3d(-2%, 6%, 0) rotate(-2deg) scale(1.03); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .no-gl .hero::before,
+  .no-gl .hero__logo { animation: none; }
 }
 /* About / case-study backdrop without WebGL */
 .no-gl .page-bg {
@@ -2222,4 +2238,31 @@ body[data-page='case'] .nav.glass {
   .cs__row {
     gap: 2px;
   }
+}
+
+/* ── Touch devices (html.touch): lighter effects ─────────────────────────────
+   iOS keeps every backdrop-filter and big blur as its own GPU layer. With ~70 small glass badges on the
+   reel cards, the blurred DJ glow and a glass panel re-blurring the moving footer gallery each frame,
+   that memory added up and Safari killed the tab near the end of the page. Solid tints instead. */
+.touch .reel__badge,
+.touch .moment__go,
+.touch .dj__chip {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(10, 10, 12, 0.72);
+}
+.touch .fglass {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: linear-gradient(160deg, rgba(34, 34, 38, 0.94), rgba(16, 16, 18, 0.96));
+}
+.touch .dj__panel {
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.touch .dj__glow {
+  display: none;
+}
+.touch .contact__space img {
+  will-change: auto;
 }

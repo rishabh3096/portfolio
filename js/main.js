@@ -39,6 +39,7 @@ const reduced = prefersReducedMotion();
 const touch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 const arrivedByTransition = document.documentElement.classList.contains('pt-in'); // came from another page of this site
 document.documentElement.classList.add('js');
+if (touch) document.documentElement.classList.add('touch'); // css: lighter effects on phones/tablets
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 mountChrome(page);

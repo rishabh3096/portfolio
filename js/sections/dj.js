@@ -213,7 +213,11 @@ export function initDJ({ root, video, reduced }) {
     nowEl.textContent = fmt(cur);
   });
 
-  // only touch YouTube when the section is close to the screen
+  // touch devices: YouTube (script + player iframe) only loads when you press play. Pre-loading it near
+  // the end of the page was the heaviest thing on a phone and coincided with iOS killing the tab.
+  if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+
+  // desktop: get YouTube ready when the section is close to the screen
   const io = new IntersectionObserver(
     ([e]) => {
       if (!e.isIntersecting) return;
