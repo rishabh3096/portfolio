@@ -41,9 +41,12 @@ export function initFooter({ root, covers, reduced }) {
     return s;
   });
 
-  // phones hide the gallery (css .contact__space), so don't build or animate it there
-  const gallery = !window.matchMedia('(max-width: 900px)').matches;
-  const items = (gallery ? SLOTS : []).slice(0, Math.min(SLOTS.length, covers.length)).map(([x, y, w], i) => {
+  // phones: a lighter gallery. 8 cards instead of 14, cycling through a third of the photos as tiny
+  // 240px copies (assets/manipulations/sm, ~11 KB each), drawn larger since the screen is narrow.
+  const phone = window.matchMedia('(max-width: 900px)').matches;
+  if (phone) covers = covers.filter((_, i) => i % 3 === 0).map((c) => c.replace('/all/', '/sm/'));
+  const slots = phone ? SLOTS.slice(0, 8).map(([x, y, w]) => [x * 0.72, y * 1.1, w * 2.2]) : SLOTS;
+  const items = slots.slice(0, Math.min(slots.length, covers.length)).map(([x, y, w], i) => {
     const img = document.createElement('img');
     img.src = covers[i % covers.length];
     img.alt = '';
@@ -52,7 +55,7 @@ export function initFooter({ root, covers, reduced }) {
     img.draggable = false;
     img.style.width = `${w}vw`;
     space.append(img);
-    return { el: img, i, loop: 0, x, y, w, phase: (i / SLOTS.length) * DEPTH, drift: (i % 2 ? 1 : -1) * (0.8 + (i % 3) * 0.5) };
+    return { el: img, i, loop: 0, x, y, w, phase: (i / slots.length) * DEPTH, drift: (i % 2 ? 1 : -1) * (0.8 + (i % 3) * 0.5) };
   });
 
   let mx = 0, my = 0, cx = 0, cy = 0; // pointer target / smoothed camera

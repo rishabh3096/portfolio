@@ -334,6 +334,36 @@ main,
   padding: calc(var(--nav-h) + 56px) var(--gutter) var(--gutter);
   overflow: hidden;
 }
+/* no WebGL (phones, tablets, old GPUs): a still version of the hero. The silver arc is a CSS gradient,
+   the monogram a flat image with a soft metallic sheen. */
+.no-gl .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(135% 62% at -8% 0%, rgba(206, 203, 198, 0.66) 0%, rgba(168, 160, 150, 0.42) 52%, rgba(120, 110, 100, 0.22) 60%, rgba(10, 10, 11, 0) 63%),
+    radial-gradient(60% 40% at 100% 100%, rgba(120, 120, 125, 0.16), transparent 70%),
+    var(--ink);
+}
+.no-gl .hero__logo {
+  background: url('../assets/logo.png') center / contain no-repeat;
+  filter: invert(1) drop-shadow(0 0 1px rgba(0, 0, 0, 0.4));
+  opacity: 0.86;
+  -webkit-mask: linear-gradient(135deg, #000 35%, rgba(0, 0, 0, 0.55) 50%, #000 65%) center / 300% 300%;
+  mask: linear-gradient(135deg, #000 35%, rgba(0, 0, 0, 0.55) 50%, #000 65%) center / 300% 300%;
+  animation: logo-sheen 5s ease-in-out infinite;
+}
+@keyframes logo-sheen {
+  0%, 100% { -webkit-mask-position: 100% 100%; mask-position: 100% 100%; }
+  50% { -webkit-mask-position: 0% 0%; mask-position: 0% 0%; }
+}
+/* About / case-study backdrop without WebGL */
+.no-gl .page-bg {
+  background:
+    radial-gradient(80% 55% at 10% 0%, rgba(214, 212, 208, 0.5), rgba(150, 140, 128, 0.22) 40%, transparent 72%),
+    var(--ink);
+}
 .hero::after {
   content: '';
   position: absolute;
@@ -1543,7 +1573,10 @@ main,
     padding-block: var(--s12) var(--s3);
   }
   .contact__space {
-    display: none;
+    overflow: hidden; /* the stage scrolls normally here, so keep the cards inside it */
+  }
+  .contact__space img {
+    border-radius: 10px;
   }
   .fglass__top {
     grid-template-columns: 1fr;
