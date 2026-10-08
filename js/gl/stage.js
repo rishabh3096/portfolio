@@ -9,9 +9,13 @@ import { Renderer, Camera, Transform, Plane, RenderTarget } from '../../vendor/o
 //   bgScene  - rendered first into an offscreen texture (stage.target) so the glass logo can
 //              refract the live background behind it.
 export class Stage {
-  constructor() {
+  // anchored: the canvas sits at the top of the page (position: absolute) and scrolls with it instead of being
+  // fixed to the screen. Used on touch devices for the hero only: native touch scrolling runs ahead of
+  // requestAnimationFrame, so a fixed canvas redrawn at the hero's position visibly drifted.
+  constructor({ anchored = false } = {}) {
+    this.anchored = anchored;
     this.canvas = document.createElement('canvas');
-    this.canvas.className = 'gl';
+    this.canvas.className = anchored ? 'gl gl--anchored' : 'gl';
     this.canvas.setAttribute('aria-hidden', 'true');
     document.body.prepend(this.canvas);
 
@@ -49,9 +53,11 @@ export class Stage {
   resize() {
     // phones fire resize every time the address bar slides in or out; a full-screen render target per
     // event used to pile up GPU memory until iOS killed the tab, so skip no-op resizes and free the old one
-    if (this.W === window.innerWidth && this.H === window.innerHeight && this.target) return;
+    // anchored: size once to the tallest viewport (address bar hidden) and ignore the bar sliding in and out
+    const H = this.anchored ? Math.max(this.H || 0, window.innerHeight, document.documentElement.clientHeight) : window.innerHeight;
+    if (this.W === window.innerWidth && this.H === H && this.target) return;
     this.W = window.innerWidth;
-    this.H = window.innerHeight;
+    this.H = H;
     this.renderer.setSize(this.W, this.H);
     this.camera.orthographic({
       left: -this.W / 2,
@@ -95,8 +101,16 @@ export class Stage {
 
     let bgVisible = false;
     let any = false;
+    // anchored canvas: page coordinates (it scrolls with the page), so add the scroll offset back
+    const oy = this.anchored ? window.scrollY : 0;
+    if (this.anchored && oy > this.H + 80) {
+      // the hero is fully scrolled away: nothing to draw until it comes back
+      this._drewLast = false;
+      return;
+    }
     for (const item of this.items) {
-      const rect = item.el.getBoundingClientRect();
+      const r = item.el.getBoundingClientRect();
+      const rect = oy ? { left: r.left, top: r.top + oy, width: r.width, height: r.height, bottom: r.bottom + oy, right: r.right } : r;
       const onscreen = rect.bottom > -80 && rect.top < this.H + 80 && rect.width > 0;
       item.mesh.visible = onscreen && item.ready;
       if (!item.mesh.visible) continue;

@@ -116,6 +116,12 @@ p {
   z-index: 0;
   pointer-events: none;
 }
+/* touch: pinned to the top of the page, scrolls with the hero (size set in px by the renderer) */
+.gl--anchored {
+  position: absolute;
+  inset: 0 auto auto 0;
+  height: auto;
+}
 main,
 .contact {
   position: relative;

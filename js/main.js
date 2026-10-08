@@ -70,9 +70,13 @@ document.addEventListener('click', (e) => {
 });
 
 // ── Pages ──────────────────────────────────────────────────────────────────────
-// no WebGL on touch devices at all: it lags behind native scrolling (the hero band and logo drifted) and its
-// GPU memory was what made iOS kill the tab near the end of the page. They get the CSS fallback (.no-gl).
-const stage = (page === 'home' || page === 'about' || page === 'case') && !touch && webglAvailable() ? new Stage() : null;
+// Touch devices: only the home hero uses WebGL, on a canvas anchored to the top of the page (it scrolls
+// natively with the hero, so it can't lag behind touch scrolling). Work cards there are plain images, and
+// About / Frex use the CSS backdrop (.no-gl). Desktop: one fixed canvas for everything.
+const stage =
+  webglAvailable() && (touch ? page === 'home' : page === 'home' || page === 'about' || page === 'case')
+    ? new Stage({ anchored: touch })
+    : null;
 if (!stage) document.documentElement.classList.add('no-gl');
 
 const brandTextEl = document.querySelector('.brandmark__text');
