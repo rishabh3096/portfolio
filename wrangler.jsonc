@@ -1,0 +1,10 @@
+// Cloudflare Workers config: the whole folder is a static site, minus what .assetsignore lists.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio",
+  "compatibility_date": "2026-10-06",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "404-page"
+  }
+}

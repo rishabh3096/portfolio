@@ -1,0 +1,8 @@
+# Files Cloudflare should not publish as part of the website
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+serve.py
+README.md
+.DS_Store
