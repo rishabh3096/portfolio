@@ -1,18 +1,12 @@
 import { Texture } from '../../vendor/ogl.mjs';
 
 // Turns a flat logo PNG (dark glyph on transparent or white) into two textures:
-//   tMask   (1024², R = sharp coverage)       -> crisp silhouette, strokes thickened (THICKEN)
+//   tMask   (1024², R = sharp coverage)       -> crisp silhouette
 //   tHeight (512²,  R/G/B = 3 blur radii)     -> smooth "thickness" the shader reads as a 3D surface
 // All done on the CPU once at startup; no canvas filters so it behaves the same in every browser.
 
 const MASK_SIZE = 1024;
 const HEIGHT_SIZE = 512;
-// crop = glyph bounding box x PAD. Generous, so the extruded side walls and the thickened strokes never
-// hit the texture edge; GlassLogo scales its quad up by PAD / 1.22 so the glyph keeps its old size.
-export const PAD = 1.62;
-// stroke growth: blur radius (px at 1024) and the coverage threshold the blur is re-cut at.
-// A lower threshold = a fatter, rounder stroke. Small enough that the $ and ₹ keep their counters.
-const THICKEN = { r: 4, lo: 0.14, hi: 0.22 };
 
 const loadImage = (src) =>
   new Promise((res, rej) => {
@@ -85,7 +79,7 @@ export async function buildLogoTextures(gl, src) {
   }
 
   // 2. square crop with breathing room so the blur never clips at the edges
-  const side = Math.max(x1 - x0, y1 - y0) * PAD;
+  const side = Math.max(x1 - x0, y1 - y0) * 1.22;
   const cx = (x0 + x1) / 2;
   const cy = (y0 + y1) / 2;
   const sx = cx - side / 2;
@@ -104,13 +98,7 @@ export async function buildLogoTextures(gl, src) {
 
   // 3. sharp mask
   const big = draw(MASK_SIZE);
-  // thicken: blur, then re-cut at a low threshold (a soft dilation with rounded ends, like poured glass)
-  const raw = gaussian(coverageFrom(big.ctx, MASK_SIZE, MASK_SIZE), MASK_SIZE, MASK_SIZE, THICKEN.r);
-  const sharp = new Float32Array(raw.length);
-  for (let i = 0; i < raw.length; i++) {
-    const t = Math.min(1, Math.max(0, (raw[i] - THICKEN.lo) / (THICKEN.hi - THICKEN.lo)));
-    sharp[i] = t * t * (3 - 2 * t);
-  }
+  const sharp = coverageFrom(big.ctx, MASK_SIZE, MASK_SIZE);
   const maskCanvas = document.createElement('canvas');
   maskCanvas.width = maskCanvas.height = MASK_SIZE;
   const mctx = maskCanvas.getContext('2d');
@@ -122,13 +110,9 @@ export async function buildLogoTextures(gl, src) {
   }
   mctx.putImageData(mimg, 0, 0);
 
-  // 4. height field from the thickened shape (downsampled 2x): three blur radii packed into RGB
-  const base = new Float32Array(HEIGHT_SIZE * HEIGHT_SIZE);
-  for (let y = 0; y < HEIGHT_SIZE; y++)
-    for (let x = 0; x < HEIGHT_SIZE; x++) {
-      const i = y * 2 * MASK_SIZE + x * 2;
-      base[y * HEIGHT_SIZE + x] = (sharp[i] + sharp[i + 1] + sharp[i + MASK_SIZE] + sharp[i + MASK_SIZE + 1]) * 0.25;
-    }
+  // 4. height field: three blur radii packed into RGB
+  const small = draw(HEIGHT_SIZE);
+  const base = coverageFrom(small.ctx, HEIGHT_SIZE, HEIGHT_SIZE);
   const b1 = gaussian(base, HEIGHT_SIZE, HEIGHT_SIZE, 2);
   const b2 = gaussian(base, HEIGHT_SIZE, HEIGHT_SIZE, 5);
   const b3 = gaussian(base, HEIGHT_SIZE, HEIGHT_SIZE, 12);
