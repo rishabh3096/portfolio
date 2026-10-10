@@ -2,6 +2,7 @@
 // up (after mariajoaoabrantes.work/about). Each piece is plain HTML/SVG drawn in the style of that app's UI
 // (Photoshop toolbar, After Effects timeline, Premiere clips, Illustrator bezier, Figma selection, Blender
 // gizmo…), simulated as a rigid body with Matter.js (vendor/matter.min.js). Desktop: grab and throw them.
+// The app icons are the real ones, taken from the installed apps (assets/tools).
 // Touch: tap one to flick it (dragging would fight the page scroll). The simulation sleeps when everything
 // has settled and pauses when the section is off screen.
 
@@ -18,29 +19,32 @@ const svg = (d, vb = '0 0 22 22') => `<svg viewBox="${vb}" aria-hidden="true" fi
 
 // [html, modifier]. Order is the drop order; the phone subset is marked with `m`.
 const PIECES = [
-  { m: 1, cls: 'app', html: '<b>Ps</b>', style: '--fg:#31a8ff;--bg:#001e36' },
+  { m: 1, cls: 'icon', html: '<img src="assets/tools/ps.png" alt="" draggable="false" />' },
   { m: 1, cls: 'ae', html: `<div class="pc-ae__top"><span>0;00;02;12</span><i></i></div>
       <div class="pc-ae__row"><em style="--c:#e9a43a"></em><span>Logo reveal</span><s style="left:28%"></s><s style="left:58%"></s></div>
       <div class="pc-ae__row"><em style="--c:#4fb3d9"></em><span>Glow</span><s style="left:40%"></s><s style="left:84%"></s></div>
       <div class="pc-ae__row"><em style="--c:#b88cf0"></em><span>Camera</span><s style="left:18%"></s><s style="left:70%"></s></div>
       <div class="pc-ae__head"></div>` },
   { m: 1, cls: 'pill', html: 'Motion design' },
-  { m: 1, cls: 'app', html: '<b>Ae</b>', style: '--fg:#d291ff;--bg:#1f0040' },
+  { m: 1, cls: 'icon', html: '<img src="assets/tools/ae.png" alt="" draggable="false" />' },
   { m: 1, cls: 'pstools', html: [I.move, I.marquee, I.lasso, I.brush, I.pen, I.type].map((d) => svg(d)).join('') },
   { m: 1, cls: 'figma', html: '<span class="pc-figma__name">Frame 1</span><i></i><i></i><i></i><i></i><span class="pc-figma__size">1440 × 1024</span>' },
   { m: 0, cls: 'pill', html: 'Key visuals' },
-  { m: 1, cls: 'app', html: '<b>Ai</b>', style: '--fg:#ff9a00;--bg:#330000' },
+  { m: 1, cls: 'icon', html: '<img src="assets/tools/ai.png" alt="" draggable="false" />' },
   { m: 1, cls: 'bezier', html: '<svg viewBox="0 0 160 100" aria-hidden="true"><path class="h" d="M22 78 L52 18 M128 22 L98 82"/><path class="c" d="M22 78 C52 18 98 82 128 22"/><rect x="18" y="74" width="8" height="8"/><rect x="124" y="18" width="8" height="8"/><circle cx="52" cy="18" r="3.5"/><circle cx="98" cy="82" r="3.5"/></svg>' },
   { m: 0, cls: 'pr', html: '<span style="--c:#7d6bd6;flex:3">V1</span><span style="--c:#4aa59a;flex:2">B-roll</span><span style="--c:#d36aa6;flex:2.4">Titles</span>' },
+  { m: 1, cls: 'icon', html: '<img src="assets/tools/blender.png" alt="" draggable="false" />' },
   { m: 1, cls: 'gizmo', html: '<svg viewBox="0 0 100 100" aria-hidden="true"><line x1="50" y1="50" x2="84" y2="58" stroke="#f04a5d"/><line x1="50" y1="50" x2="30" y2="70" stroke="#7ec431"/><line x1="50" y1="50" x2="50" y2="14" stroke="#4d8cf0"/><circle cx="84" cy="58" r="9" fill="#f04a5d"/><circle cx="30" cy="70" r="9" fill="#7ec431"/><circle cx="50" cy="14" r="9" fill="#4d8cf0"/><text x="84" y="61.5">X</text><text x="30" y="73.5">Y</text><text x="50" y="17.5">Z</text></svg>' },
-  { m: 0, cls: 'app', html: '<b>Pr</b>', style: '--fg:#9999ff;--bg:#00005b' },
+  { m: 1, cls: 'icon', html: '<img src="assets/tools/pr.png" alt="" draggable="false" />' },
+  { m: 1, cls: 'icon', html: '<img src="assets/tools/capcut.png" alt="" draggable="false" />' },
   { m: 1, cls: 'cursor', html: `${svg('<path d="M3 2l14 6.5-6.2 1.6L8 17z"/>', '0 0 20 20')}<span>Rish</span>` },
   { m: 0, cls: 'layers', html: `<div>${svg(I.eye, '0 0 20 20')}<i style="--t:linear-gradient(135deg,#ff6b3d,#ffc23d)"></i><span>Glow</span></div>
-      <div>${svg(I.eye, '0 0 20 20')}<i style="--t:#202024"></i><span>Product</span></div>
-      <div>${svg(I.eye, '0 0 20 20')}<i style="--t:#e9e6df"></i><span>Background</span></div>` },
+      <div>${svg(I.eye, '0 0 20 20')}<i style="--t:rgba(0,0,0,0.35)"></i><span>Product</span></div>
+      <div>${svg(I.eye, '0 0 20 20')}<i style="--t:rgba(255,255,255,0.22)"></i><span>Background</span></div>` },
   { m: 1, cls: 'pill', html: 'Brand identity' },
   { m: 1, cls: 'cube', html: '<svg viewBox="0 0 100 100" aria-hidden="true"><path class="t" d="M50 12 86 31 50 50 14 31z"/><path class="l" d="M14 31 50 50v38L14 69z"/><path class="r" d="M86 31 50 50v38l36-19z"/><path class="o" d="M50 12 86 31v38L50 88 14 69V31z M14 31 50 50 86 31 M50 50v38"/></svg>' },
-  { m: 0, cls: 'app', html: '<b>Id</b>', style: '--fg:#ff3366;--bg:#49021f' },
+  { m: 0, cls: 'icon', html: '<img src="assets/tools/id.png" alt="" draggable="false" />' },
+  { m: 1, cls: 'icon pc-icon--round', html: '<img src="assets/tools/serato.png" alt="" draggable="false" />', circle: 1 },
   { m: 1, cls: 'swatch', html: '<i></i><i></i>' },
   { m: 0, cls: 'graph', html: '<svg viewBox="0 0 140 90" aria-hidden="true"><path class="g" d="M10 80 H130 M10 10 V80"/><path class="c" d="M12 78 C52 78 58 14 70 14 S88 78 128 78"/></svg><span>Easy ease</span>' },
   { m: 1, cls: 'pill', html: 'Launch films' },
@@ -65,7 +69,7 @@ export function initHello({ root, reduced }) {
     el.innerHTML = p.html;
     el.setAttribute('aria-hidden', 'true');
     pit.append(el);
-    return { el };
+    return { el, circle: !!p.circle };
   });
 
   // extra solver iterations: with the defaults, small pieces got squeezed through the floor under the pile
@@ -95,14 +99,17 @@ export function initHello({ root, reduced }) {
     pc.w = w;
     pc.h = h;
     const r = parseFloat(getComputedStyle(pc.el).borderRadius) || 6;
-    pc.body = Bodies.rectangle(rand(w / 2 + 8, W - w / 2 - 8), -h - i * 70 - rand(0, 120), w, h, {
-      chamfer: { radius: Math.min(r, w / 2 - 1, h / 2 - 1) },
+    const x0 = rand(w / 2 + 8, W - w / 2 - 8), y0 = -h - i * 70 - rand(0, 120);
+    const opts = {
       angle: rand(-0.5, 0.5),
       restitution: 0.18,
       friction: 0.55,
       frictionAir: 0.012,
       density: 0.0018,
-    });
+    };
+    pc.body = pc.circle
+      ? Bodies.circle(x0, y0, w / 2, opts)
+      : Bodies.rectangle(x0, y0, w, h, { ...opts, chamfer: { radius: Math.min(r, w / 2 - 1, h / 2 - 1) } });
     pc.body.plugin.el = pc.el;
     Composite.add(engine.world, pc.body);
   };

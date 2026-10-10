@@ -2949,3 +2949,97 @@ body[data-page='work'] {
   stroke: #f5c542;
   stroke-width: 2.2;
 }
+
+/* real app icons (assets/tools, from the installed apps) */
+.pc-icon {
+  width: 4.7em;
+  height: 4.7em;
+  border-radius: 22.5%; /* the macOS squircle */
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+}
+.pc-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.pc-icon--round {
+  border-radius: 50%;
+}
+/* every UI piece is glass, like the rest of the site: no solid fills */
+.pc-pill,
+.pc-pstools,
+.pc-ae,
+.pc-pr,
+.pc-bezier,
+.pc-layers,
+.pc-graph,
+.pc-cube,
+.pc-gizmo {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 14px 34px rgba(0, 0, 0, 0.35);
+}
+/* frosted on desktop; phones skip the blur (it's redrawn every frame while pieces move) */
+html:not(.touch) .pc-pill,
+html:not(.touch) .pc-pstools,
+html:not(.touch) .pc-ae,
+html:not(.touch) .pc-pr,
+html:not(.touch) .pc-bezier,
+html:not(.touch) .pc-layers,
+html:not(.touch) .pc-graph,
+html:not(.touch) .pc-cube,
+html:not(.touch) .pc-gizmo {
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+}
+.touch .pc-pill,
+.touch .pc-pstools,
+.touch .pc-ae,
+.touch .pc-pr,
+.touch .pc-bezier,
+.touch .pc-layers,
+.touch .pc-graph,
+.touch .pc-cube,
+.touch .pc-gizmo {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05));
+}
+.pc-ae__top,
+.pc-ae__row + .pc-ae__row {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.pc-pstools svg:first-child {
+  background: rgba(255, 255, 255, 0.14);
+}
+.pc-pr span {
+  background: color-mix(in srgb, var(--c) 72%, transparent);
+}
+/* Illustrator curve: light stroke on glass instead of black on white */
+.pc-bezier .c {
+  stroke: var(--bone);
+}
+.pc-bezier rect {
+  fill: transparent;
+}
+.pc-layers div:first-child {
+  background: rgba(77, 140, 240, 0.28);
+}
+.pc-layers i {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+/* Photoshop colours: the background colour is a frosted square, not a white fill */
+.pc-swatch i:last-child {
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.pc-cube {
+  padding: 0.5em;
+}
+.pc-cube .t { fill: rgba(255, 255, 255, 0.42); }
+.pc-cube .l { fill: rgba(255, 255, 255, 0.16); }
+.pc-cube .r { fill: rgba(255, 255, 255, 0.26); }
+.pc-gizmo text {
+  fill: #0a0a0b;
+}
