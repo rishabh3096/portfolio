@@ -6,4 +6,4 @@ wrangler.jsonc
 serve.py
 README.md
 .DS_Store
-tools
+/tools
