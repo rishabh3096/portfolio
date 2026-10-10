@@ -12,6 +12,7 @@ import { CardPlane } from './gl/cardPlane.js';
 import { initCarousel } from './carousel.js';
 import { initReels, initStrip } from './sections/reels.js';
 import { initCasePage } from './sections/casePage.js';
+import { initWorkCanvas } from './sections/workCanvas.js';
 import { initMoments } from './sections/moments.js';
 import { initDJ } from './sections/dj.js';
 import { initFooter } from './sections/footer.js';
@@ -87,8 +88,12 @@ const fadeEls = [...document.querySelectorAll('[data-fade]')];
 if (page === 'home') initHome();
 if (page === 'about' || page === 'case') initAbout(); // case studies share the About backdrop
 if (page === 'case') initCasePage();
+if (page === 'work' && !reduced) gsap.fromTo(fadeEls, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 1, stagger: 0.1, delay: 0.2, ease: 'expo.out' });
+else if (page === 'work') gsap.set(fadeEls, { opacity: 1 });
+if (page === 'work') initWorkCanvas({ root: document.getElementById('canvas'), index: document.getElementById('index'), projects, reduced });
 
-initFooter({ root: document.querySelector('.contact'), covers: manipulations, reduced });
+const footerEl = document.querySelector('.contact');
+if (footerEl) initFooter({ root: footerEl, covers: manipulations, reduced });
 initReveals(reduced);
 initTransitions({ reduced });
 if (page === 'home') initScrollDepth({ reduced });

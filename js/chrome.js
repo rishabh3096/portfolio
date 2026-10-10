@@ -12,9 +12,10 @@ export function mountChrome(page) {
       <img class="brandmark__logo" src="assets/logo.png" alt="" ${page !== 'home' ? 'data-fade' : ''} />
     </a>
     <nav class="nav glass" data-fade aria-label="Primary">
-      <a href="./#work" data-anchor>Work</a>
+      ${page !== 'home' ? '<a href="./">Home</a>' : ''}
+      <a href="work.html" ${page === 'work' ? 'aria-current="page"' : ''}>Work</a>
       <a href="about.html" ${page === 'about' ? 'aria-current="page"' : ''}>About</a>
-      <a href="#contact" data-anchor>Contact</a>
+      <a href="${page === 'work' ? './#contact' : '#contact'}" data-anchor>Contact</a>
     </nav>
   `;
   document.body.prepend(header);
@@ -76,5 +77,6 @@ export function mountChrome(page) {
       </div>
     </div>
   `;
-  document.body.append(footer);
+  // the Work page is one full-screen canvas with no scroll, so it has no footer (Contact goes to the home one)
+  if (page !== 'work') document.body.append(footer);
 }

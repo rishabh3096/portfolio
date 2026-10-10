@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Work — Rishabh Yadav</title>
+  <meta name="description" content="Every project by Rishabh Yadav: brand campaigns, launches, motion and social." />
+  <link rel="canonical" href="https://rishx.cc/work" />
+  <meta property="og:title" content="Work — Rishabh Yadav" />
+  <meta property="og:description" content="Every project by Rishabh Yadav: brand campaigns, launches, motion and social." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rishx.cc/work" />
+  <meta property="og:image" content="https://rishx.cc/assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0a0a0b" />
+  <script>try{if(sessionStorage.getItem('rs-pt'))document.documentElement.classList.add('pt-in')}catch(e){}</script>
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="256x256" href="assets/favicon-256.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=switzer@300,400,500,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="vendor/lenis.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <script src="vendor/gsap.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body data-page="work">
+  <main id="main" class="wc">
+    <h1 class="sr-only">Work</h1>
+    <!-- endless drag canvas of every project (js/sections/workCanvas.js) -->
+    <div class="wc__canvas" id="canvas" data-cursor="drag" tabindex="0" role="region" aria-label="All projects. Drag, scroll or use the arrow keys to explore; the Index button lists them all.">
+      <div class="wc__world"></div>
+    </div>
+    <div class="wc__hud">
+      <p class="small dim wc__hint">Drag to explore</p>
+      <button class="btn glass wc__toggle" id="index-toggle" type="button" aria-expanded="false" aria-controls="index">Index</button>
+    </div>
+    <!-- the same projects as a plain list -->
+    <section class="wc__index" id="index" aria-label="Project index">
+      <ol class="wc__list"></ol>
+    </section>
+  </main>
+</body>
+</html>
