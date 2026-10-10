@@ -32,13 +32,23 @@ def blocks_html(c):
     for b in json.loads((ROOT / 'assets/cases' / c['slug'] / 'manifest.json').read_text()):
         k = b[0]
         if k == 'i':
-            out.append(f'      <figure class="cs__m">{img(b[1], c["alt"] if first else "", eager=first)}</figure>')
+            # a 5th value = the image's width on Behance when narrower than the page: shown at that width, centred
+            narrow = f' style="--w:{b[4] / 1400 * 100:.2f}%"' if len(b) > 4 else ''
+            out.append(f'      <figure class="cs__m{" cs__m--narrow" if narrow else ""}"{narrow}>{img(b[1], c["alt"] if first else "", eager=first)}</figure>')
             first = False
+        elif k == 'g':
+            rows = '\n'.join('        <div class="cs__row">' + ''.join(img(t[0], '') for t in r) + '</div>' for r in b[1])
+            out.append(f'      <figure class="cs__m cs__grid">\n{rows}\n      </figure>')
+        elif k == 'vm':
+            out.append(f'      <figure class="cs__m cs__film"><button class="cs__yt cs__vm" type="button" data-vimeo="{b[1]}" aria-label="Play: {html.escape(b[5])} (Vimeo)" style="background-image:url({b[2]});aspect-ratio:{b[3]}/{b[4]}"><span class="cs__ytplay" aria-hidden="true"></span></button></figure>')
+        elif k == 'link':
+            out.append(f'      <p class="cs__label"><a class="btn glass" href="{html.escape(b[1])}" target="_blank" rel="noopener">{html.escape(b[2])}</a></p>')
         elif k == 'v':
             # silent loop: src set and played only while on screen (js/sections/casePage.js)
-            out.append(f'      <figure class="cs__m"><video class="cs__loop" data-src="{b[1]}" poster="{b[2]}" width="{b[3]}" height="{b[4]}" muted loop playsinline preload="none" aria-hidden="true" style="--ar:{b[3]/b[4]:.4f}"></video></figure>')
+            out.append(f'      <figure class="cs__m"><video class="cs__loop" data-src="{b[1]}" data-poster="{b[2]}" width="{b[3]}" height="{b[4]}" muted loop playsinline preload="none" aria-hidden="true" style="--ar:{b[3]/b[4]:.4f}"></video></figure>')
         elif k == 'film':
-            out.append(f'      <figure class="cs__m cs__film"><video src="{b[1]}" poster="{b[2]}" controls playsinline preload="none"></video></figure>')
+            poster = b[2] if len(b) > 2 else b[1].rsplit('.', 1)[0] + '.jpg'  # films sit next to a same-name poster
+            out.append(f'      <figure class="cs__m cs__film"><video src="{b[1]}" poster="{poster}" controls playsinline preload="none"></video></figure>')
         elif k == 'yt':
             out.append(f'      <figure class="cs__m cs__film"><button class="cs__yt" type="button" data-yt="{b[1]}" aria-label="Play the film (YouTube)" style="background-image:url(https://i.ytimg.com/vi/{b[1]}/hqdefault.jpg)"><span class="cs__ytplay" aria-hidden="true"></span></button></figure>')
         elif k == 'sc':
@@ -146,6 +156,41 @@ CASES = [
          lead='“Ring in Revolution”: launch creatives for boAt’s Smart Ring Active, with every feature told as its own “Ring in…” story, from style and comfort to health, fitness and a five-day battery.',
          desc='Smart Ring Active: launch visuals and motion for boAt’s smart ring.',
          facts=[('Client', 'boAt'), ('Category', 'Wearables'), ('Scope', 'Launch campaign · Motion')]),
+    dict(slug='lunar-vista', title='Lunar Vista', sheet='#040404',
+         alt='boAt Lunar Vista smartwatch',
+         lead='“Life Comes Full Circle”: a launch campaign for boAt’s Lunar Vista smartwatch, built around its 1.52" circular display, with every feature framed as a circle: of connections, vitality, athletic achievements, choices, efficiency and reliability.',
+         desc='Lunar Vista: a launch campaign for boAt’s circular-display smartwatch.',
+         facts=[('Client', 'boAt'), ('Category', 'Wearables'), ('Scope', 'Launch campaign · Motion')]),
+    dict(slug='watch-storm', title='Watch Storm', sheet='#141414',
+         alt='boAt Watch Storm smartwatch',
+         lead='“Smart Got Better Looking”: launch creatives for boAt’s Watch Storm, from the feature story and the launch film to the sell-out posts after 10,000 units went in 30 seconds on Flipkart.',
+         desc='Watch Storm: launch creatives and film for boAt’s smartwatch.',
+         facts=[('Client', 'boAt'), ('Year', '2020'), ('Scope', 'Launch campaign · Film · Social')]),
+    dict(slug='brewery-food-menu', title='Brewery Food Menu', sheet='#181715',
+         alt='Food menu for Factory brewery',
+         lead='A food menu for Factory: a dark, photo-led menu book that moves from quick bites and starters through Asian mains, pizza and biryani to dessert.',
+         desc='Brewery Food Menu: a photo-led menu book for Factory.',
+         facts=[('Client', 'Factory'), ('Year', '2019'), ('Scope', 'Menu design · Print')]),
+    dict(slug='boat-lifestyle', title='boAt Lifestyle', sheet='#e8e8e9',
+         alt='boAt Lifestyle: graphic and motion design',
+         lead='Graphic and motion design for boAt’s social channels: product pre-buzz films, launch posts and campaigns like #OwnTheChase, G.O.A.T and #SoundThatMatters, across Rockerz, Airdopes, soundbars and smartwatches.',
+         desc='boAt Lifestyle: graphic and motion design for boAt’s social channels.',
+         facts=[('Client', 'boAt'), ('Year', '2020–21'), ('Scope', 'Social · Motion · Campaigns')]),
+    dict(slug='ideatic-social', title='Ideatic Social Media', sheet='#c9c9c7',
+         alt='Social media creatives made at Ideatic',
+         lead='Social media at Ideatic for bars, cafés and nightlife brands, including Brew Buddy, Chugli Café, Soi 7 and Molecule: weekly event posts, menus and animated creatives.',
+         desc='Ideatic: social media creatives for bars, cafés and nightlife brands.',
+         facts=[('Studio', 'Ideatic'), ('Year', '2019'), ('Scope', 'Social · Animated posts')]),
+    dict(slug='photo-manipulations', title='Digital Photo Manipulations', sheet='#111113',
+         alt='Digital photo manipulations',
+         lead='Personal work: surreal digital photo manipulations, built up in Photoshop and shared on Instagram.',
+         desc='Digital Photo Manipulations: personal surreal composites.',
+         facts=[('Type', 'Personal'), ('Year', '2018–19'), ('Scope', 'Photo manipulation')]),
+    dict(slug='fifa-world-cup-2018', title='FIFA World Cup 2018', sheet='#ffffff',
+         alt='Inshorts FIFA World Cup 2018 news images',
+         lead='News images for Inshorts through the 2018 FIFA World Cup in Russia: score cards, fixtures and team line-ups, turned around against live match deadlines and published in English and Hindi at once.',
+         desc='FIFA World Cup 2018: news images for Inshorts, in English and Hindi.',
+         facts=[('Client', 'Inshorts'), ('Year', '2018'), ('Scope', 'News creatives')]),
 ]
 
 if __name__ == '__main__':

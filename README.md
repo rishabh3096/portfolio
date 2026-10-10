@@ -44,6 +44,10 @@ The other case pages (netflix, fitness-xtended, virimodo, drunken-botanist, smar
 `assets/cases/<slug>/manifest.json`: images (tall ones sliced), GIFs converted to silent MP4 loops that only
 load and play while on screen (`js/sections/casePage.js`), films with controls, a tap-to-load YouTube player,
 SoundCloud and section labels.
+Every project now has an on-site page (no card opens Behance). Grids (`['g', rows]`), Vimeo films that load
+on tap (`['vm', …]`), link buttons and narrower-than-page images are supported too. `tools/process.py` +
+`tools/specs2.py` record how each Behance project was pulled in (they need the Swift helpers that were built
+in the session scratchpad, so treat them as notes rather than a ready-to-run script).
 
 ## Moving a project on-site (instead of Behance)
 In `js/data/projects.js` set that project's `caseStudy` to a page path, for example `'work/smart-ring.html'`.

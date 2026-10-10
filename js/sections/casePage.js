@@ -1,6 +1,6 @@
 // Case-study pages: the looping clips (GIFs converted to MP4) only load once they come near the screen
 // and only play while visible, so a long page never decodes every clip at once (phones). YouTube films
-// show a thumbnail until pressed; then the player loads in place.
+// and Vimeo films show a thumbnail until pressed; then the player loads in place.
 export function initCasePage() {
   const loops = [...document.querySelectorAll('video.cs__loop')];
   if (loops.length) {
@@ -17,12 +17,26 @@ export function initCasePage() {
       { rootMargin: '200px 0px' }
     );
     loops.forEach((v) => io.observe(v));
+    // posters: browsers fetch every poster on page load, so they're only set as you get within ~2 screens
+    const near = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.poster = e.target.dataset.poster;
+          near.unobserve(e.target);
+        }),
+      { rootMargin: '1600px 0px' }
+    );
+    loops.forEach((v) => near.observe(v));
   }
 
   document.querySelectorAll('.cs__yt').forEach((btn) =>
     btn.addEventListener('click', () => {
       const f = document.createElement('iframe');
-      f.src = `https://www.youtube-nocookie.com/embed/${btn.dataset.yt}?autoplay=1&playsinline=1&rel=0`;
+      f.src = btn.dataset.vimeo
+        ? `https://player.vimeo.com/video/${btn.dataset.vimeo}?autoplay=1&byline=0&portrait=0&title=0&dnt=1`
+        : `https://www.youtube-nocookie.com/embed/${btn.dataset.yt}?autoplay=1&playsinline=1&rel=0`;
+      f.style.aspectRatio = btn.style.aspectRatio || '16 / 9';
       f.title = btn.getAttribute('aria-label') || 'Film';
       f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
       f.allowFullscreen = true;

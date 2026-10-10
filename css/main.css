@@ -2278,6 +2278,13 @@ html.is-loading body {
 .cs__sp {
   height: clamp(20px, 3vw, 40px);
 }
+.cs__m--narrow img {
+  max-width: var(--w);
+  margin-inline: auto;
+}
+.cs__label .btn {
+  display: inline-flex;
+}
 /* image grids: equal-height rows, each image's width follows its aspect ratio (--ar) */
 .cs__grid {
   display: grid;
