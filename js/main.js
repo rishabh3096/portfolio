@@ -11,6 +11,7 @@ import { buildLogoTextures } from './gl/logoMask.js';
 import { CardPlane } from './gl/cardPlane.js';
 import { initCarousel } from './carousel.js';
 import { initReels, initStrip } from './sections/reels.js';
+import { initCasePage } from './sections/casePage.js';
 import { initMoments } from './sections/moments.js';
 import { initDJ } from './sections/dj.js';
 import { initFooter } from './sections/footer.js';
@@ -85,6 +86,7 @@ const fadeEls = [...document.querySelectorAll('[data-fade]')];
 
 if (page === 'home') initHome();
 if (page === 'about' || page === 'case') initAbout(); // case studies share the About backdrop
+if (page === 'case') initCasePage();
 
 initFooter({ root: document.querySelector('.contact'), covers: manipulations, reduced });
 initReveals(reduced);
