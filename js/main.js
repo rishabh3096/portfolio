@@ -13,6 +13,7 @@ import { initCarousel } from './carousel.js';
 import { initReels, initStrip } from './sections/reels.js';
 import { initCasePage } from './sections/casePage.js';
 import { initWorkCanvas } from './sections/workCanvas.js';
+import { initHello } from './sections/hello.js';
 import { initMoments } from './sections/moments.js';
 import { initDJ } from './sections/dj.js';
 import { initFooter } from './sections/footer.js';
@@ -88,6 +89,7 @@ const fadeEls = [...document.querySelectorAll('[data-fade]')];
 if (page === 'home') initHome();
 if (page === 'about' || page === 'case') initAbout(); // case studies share the About backdrop
 if (page === 'case') initCasePage();
+if (page === 'about') initHello({ root: document.getElementById('hello'), reduced });
 if (page === 'work' && !reduced) gsap.fromTo(fadeEls, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 1, stagger: 0.1, delay: 0.2, ease: 'expo.out' });
 else if (page === 'work') gsap.set(fadeEls, { opacity: 1 });
 if (page === 'work') initWorkCanvas({ root: document.getElementById('canvas'), index: document.getElementById('index'), projects, reduced });
@@ -286,7 +288,7 @@ function initAbout() {
   const xp = document.getElementById('xp');
   if (xp) initExperience({ root: xp, groups: experienceGroups, reduced });
 
-  const title = document.querySelector('.about__title, .cs__title');
+  const title = document.querySelector('.hello__title, .about__title, .cs__title');
   const words = splitWords(title);
   if (!reduced) {
     const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.1 });

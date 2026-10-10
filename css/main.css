@@ -1625,7 +1625,7 @@ main,
   backdrop-filter: blur(34px) saturate(1.1);
 }
 .about {
-  padding: calc(var(--nav-h) + 140px) var(--gutter) 0;
+  padding: 0 var(--gutter);
 }
 .about__title {
   font-size: clamp(4rem, 15vw, 15rem);
@@ -2564,4 +2564,388 @@ body[data-page='work'] {
 /* Work canvas on touch: no blurred shadow per tile (redrawn every frame as tiles move = phone jank) */
 .touch .wc__media {
   box-shadow: none;
+}
+
+/* ──────────────────────────────────────────────────────────
+   About opener: "Hi, I'm Rish." + falling tool pieces (js/sections/hello.js)
+   ────────────────────────────────────────────────────────── */
+.hello {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  margin: 0 calc(var(--gutter) * -1) var(--s12);
+  overflow: hidden;
+}
+.hello__title {
+  position: absolute;
+  inset: 34% 0 auto;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(3.2rem, 9vw, 9rem);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  pointer-events: none;
+}
+.hello__title span {
+  display: inline-block;
+}
+.hello__pit {
+  position: absolute;
+  inset: 0;
+  font-size: 16px; /* every piece is sized in em, so this scales the set */
+  user-select: none;
+  -webkit-user-select: none;
+}
+@media (max-width: 699px) {
+  .hello__pit {
+    font-size: 11.5px;
+  }
+  .hello__title {
+    inset: 26% 0 auto;
+  }
+}
+/* pieces: absolutely placed, moved by transform from the physics loop */
+.pc {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: grab;
+  will-change: transform;
+  color: var(--bone);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+}
+.pc.is-in {
+  opacity: 1;
+}
+.pc.is-held {
+  cursor: grabbing;
+}
+.touch .pc {
+  box-shadow: none;
+}
+.pc svg {
+  display: block;
+}
+/* Adobe app tiles */
+.pc-app {
+  display: grid;
+  place-items: center;
+  width: 4.6em;
+  height: 4.5em;
+  border-radius: 1em;
+  background: var(--bg);
+  border: 0.16em solid var(--fg);
+  color: var(--fg);
+  font-size: 1em;
+}
+.pc-app b {
+  font-size: 2em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+/* skill pills */
+.pc-pill {
+  padding: 0.7em 1.3em;
+  border-radius: 999px;
+  background: #1c1c20;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 1.1em;
+  white-space: nowrap;
+}
+/* Photoshop toolbar */
+.pc-pstools {
+  display: grid;
+  gap: 0.35em;
+  padding: 0.55em 0.45em;
+  border-radius: 0.6em;
+  background: #323232;
+  border: 1px solid #454545;
+  color: #d8d8d8;
+}
+.pc-pstools svg {
+  width: 1.55em;
+  height: 1.55em;
+}
+.pc-pstools svg:first-child {
+  background: #4d4d4d;
+  border-radius: 0.3em;
+}
+/* After Effects timeline */
+.pc-ae {
+  width: 21em;
+  padding-bottom: 0.4em;
+  border-radius: 0.6em;
+  background: #232323;
+  border: 1px solid #3a3a3a;
+  font-size: 0.85em;
+  overflow: hidden;
+}
+.pc-ae__top {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 0.5em 0.8em;
+  border-bottom: 1px solid #333;
+  color: #4ba3ff;
+  font-variant-numeric: tabular-nums;
+}
+.pc-ae__top i {
+  flex: 1;
+  height: 0.6em;
+  background: repeating-linear-gradient(90deg, #555 0 1px, transparent 1px 0.9em);
+}
+.pc-ae__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  height: 1.9em;
+  padding: 0 0.8em;
+  color: #c9c9c9;
+}
+.pc-ae__row em {
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 0.15em;
+  background: var(--c);
+}
+.pc-ae__row span {
+  width: 6.2em;
+}
+.pc-ae__row s {
+  position: absolute;
+  top: 50%;
+  width: 0.6em;
+  height: 0.6em;
+  margin: -0.3em 0 0 calc(7.6em * 0.4);
+  background: #e8e8e8;
+  transform: rotate(45deg);
+}
+.pc-ae__head {
+  position: absolute;
+  top: 1.9em;
+  bottom: 0;
+  left: 62%;
+  width: 1px;
+  background: #4ba3ff;
+}
+/* Premiere clips */
+.pc-pr {
+  display: flex;
+  gap: 0.2em;
+  width: 17em;
+  padding: 0.35em;
+  border-radius: 0.5em;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  font-size: 0.85em;
+}
+.pc-pr span {
+  padding: 0.55em 0.6em;
+  border-radius: 0.3em;
+  background: var(--c);
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* Illustrator bezier */
+.pc-bezier {
+  width: 10em;
+  padding: 0.6em;
+  border-radius: 0.8em;
+  background: #f4f4f4;
+}
+.pc-bezier svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.pc-bezier .c {
+  fill: none;
+  stroke: #1a1a1a;
+  stroke-width: 2.5;
+}
+.pc-bezier .h {
+  stroke: #2b8cff;
+  stroke-width: 1.2;
+}
+.pc-bezier rect {
+  fill: #fff;
+  stroke: #2b8cff;
+  stroke-width: 1.5;
+}
+.pc-bezier circle {
+  fill: #2b8cff;
+}
+/* Figma selection */
+.pc-figma {
+  width: 11em;
+  height: 7em;
+  border: 1.5px solid #0d99ff;
+  background: rgba(13, 153, 255, 0.07);
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 0.9em;
+}
+.pc-figma i {
+  position: absolute;
+  width: 0.6em;
+  height: 0.6em;
+  background: #fff;
+  border: 1.5px solid #0d99ff;
+}
+.pc-figma i:nth-of-type(1) { left: -0.35em; top: -0.35em; }
+.pc-figma i:nth-of-type(2) { right: -0.35em; top: -0.35em; }
+.pc-figma i:nth-of-type(3) { left: -0.35em; bottom: -0.35em; }
+.pc-figma i:nth-of-type(4) { right: -0.35em; bottom: -0.35em; }
+.pc-figma__name {
+  position: absolute;
+  left: 0;
+  top: -1.6em;
+  color: #9aa0a6;
+}
+.pc-figma__size {
+  position: absolute;
+  left: 50%;
+  bottom: -1.9em;
+  transform: translateX(-50%);
+  padding: 0.1em 0.45em;
+  border-radius: 0.25em;
+  background: #0d99ff;
+  color: #fff;
+  white-space: nowrap;
+}
+/* Figma multiplayer cursor */
+.pc-cursor {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.1em;
+  box-shadow: none;
+}
+.pc-cursor svg {
+  width: 1.5em;
+  height: 1.5em;
+  color: #9747ff;
+  stroke: #fff;
+  stroke-width: 1.2;
+}
+.pc-cursor span {
+  margin-top: 1.1em;
+  padding: 0.25em 0.6em;
+  border-radius: 0.4em 0.4em 0.4em 0.1em;
+  background: #9747ff;
+  color: #fff;
+  font-size: 0.95em;
+}
+/* Blender viewport gizmo + default cube */
+.pc-gizmo {
+  width: 6.2em;
+  height: 6.2em;
+  border-radius: 50%;
+  background: rgba(60, 60, 64, 0.85);
+  border: 1px solid #4a4a4e;
+}
+.pc-gizmo line {
+  stroke-width: 3;
+}
+.pc-gizmo text {
+  font-size: 10px;
+  font-weight: 600;
+  fill: #111;
+  text-anchor: middle;
+}
+.pc-cube {
+  width: 6em;
+  height: 6em;
+  border-radius: 0.8em;
+  background: #2a2a2d;
+  padding: 0.5em;
+}
+.pc-cube .t { fill: #8e8e94; }
+.pc-cube .l { fill: #5c5c62; }
+.pc-cube .r { fill: #6f6f75; }
+.pc-cube .o {
+  fill: none;
+  stroke: #ff8c1a;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+/* Photoshop layers panel */
+.pc-layers {
+  width: 13em;
+  padding: 0.3em;
+  border-radius: 0.5em;
+  background: #2b2b2b;
+  border: 1px solid #3d3d3d;
+  font-size: 0.85em;
+  color: #d0d0d0;
+}
+.pc-layers div {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.4em 0.5em;
+  border-radius: 0.3em;
+}
+.pc-layers div:first-child {
+  background: #3d4a5c;
+}
+.pc-layers svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+.pc-layers i {
+  width: 2em;
+  height: 1.4em;
+  border-radius: 0.15em;
+  background: var(--t);
+  border: 1px solid #555;
+}
+/* Photoshop foreground / background colour */
+.pc-swatch {
+  width: 4.2em;
+  height: 4.2em;
+  box-shadow: none;
+}
+.pc-swatch i {
+  position: absolute;
+  width: 2.8em;
+  height: 2.8em;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #000;
+}
+.pc-swatch i:first-child {
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background: #ff4a1c;
+}
+.pc-swatch i:last-child {
+  right: 0;
+  bottom: 0;
+  background: #f2efe9;
+}
+/* After Effects graph editor */
+.pc-graph {
+  width: 10em;
+  padding: 0.6em 0.6em 0.4em;
+  border-radius: 0.6em;
+  background: #1f1f1f;
+  border: 1px solid #353535;
+  font-size: 0.85em;
+  color: #9a9a9a;
+}
+.pc-graph svg {
+  width: 100%;
+  height: auto;
+}
+.pc-graph .g {
+  fill: none;
+  stroke: #444;
+}
+.pc-graph .c {
+  fill: none;
+  stroke: #f5c542;
+  stroke-width: 2.2;
 }
