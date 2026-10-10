@@ -56,15 +56,15 @@ export function mountChrome(page) {
               <span class="ffield__addr">${email}</span>
               <span class="copy__hint small" aria-live="polite">Copy</span>
             </button>
-            <a class="fbtn" href="mailto:${email}">Email me <span aria-hidden="true">↗</span></a>
+            <a class="fbtn" href="mailto:${email}">Email me <span aria-hidden="true">↗︎</span></a>
           </div>
         </div>
 
         <nav class="fglass__links" aria-label="Links and downloads">
-          <a href="${links.behance}" target="_blank" rel="noopener">Behance ↗</a>
-          <a href="${links.linkedin}" target="_blank" rel="noopener">LinkedIn ↗</a>
-          <a href="${links.instagram}" target="_blank" rel="noopener">Instagram ↗</a>
-          <a href="${links.soundcloud}" target="_blank" rel="noopener">SoundCloud ↗</a>
+          <a href="${links.behance}" target="_blank" rel="noopener">Behance ↗︎</a>
+          <a href="${links.linkedin}" target="_blank" rel="noopener">LinkedIn ↗︎</a>
+          <a href="${links.instagram}" target="_blank" rel="noopener">Instagram ↗︎</a>
+          <a href="${links.soundcloud}" target="_blank" rel="noopener">SoundCloud ↗︎</a>
           ${resume ? `<a href="${encodeURI(resume)}" download="Resume - ${config.name}.pdf">Resume ↓</a>` : ''}
           ${portfolio ? `<a href="${encodeURI(portfolio)}" download="Portfolio - ${config.name}.pdf">Portfolio PDF ↓</a>` : ''}
         </nav>
