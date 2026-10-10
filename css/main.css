@@ -2561,3 +2561,7 @@ body[data-page='work'] {
     display: none; /* phones: just the project name under each tile */
   }
 }
+/* Work canvas on touch: no blurred shadow per tile (redrawn every frame as tiles move = phone jank) */
+.touch .wc__media {
+  box-shadow: none;
+}

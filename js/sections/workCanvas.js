@@ -13,6 +13,10 @@ export function initWorkCanvas({ root, index, projects, reduced }) {
   const N = projects.length;
   const world = root.querySelector('.wc__world');
   const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // canvas thumbnails, not the full covers: ~35 tiles decoded at once at 1000px was >100 MB of image memory,
+  // which made phones stutter and drop frames. 480w on phones (~3x a tile), 720w elsewhere.
+  const thumbSize = window.innerWidth < 700 ? 480 : 720;
+  const thumb = (cover) => `assets/thumbs/${thumbSize}/${cover.includes('/frex/') ? 'frex-cover.jpg' : cover.split('/').pop()}`;
 
   // cell size, grid size and the number of live tiles follow the viewport
   let CW, CH, TW, TH, cols, rows, W, H;
@@ -25,8 +29,10 @@ export function initWorkCanvas({ root, index, projects, reduced }) {
     TH = Math.round(TW * 0.78);
     CW = TW + (small ? 26 : 56);
     CH = TH + (small ? 54 : 76); // room for the caption
-    cols = Math.ceil(W / CW) + 3;
-    rows = Math.ceil(H / CH) + 3;
+    // one spare row/column beyond each edge is enough; phones get the minimum
+    const spare = small ? 2 : 3;
+    cols = Math.ceil(W / CW) + spare;
+    rows = Math.ceil(H / CH) + spare;
     const need = cols * rows;
     while (tiles.length < need) tiles.push(makeTile());
     while (tiles.length > need) tiles.pop().el.remove();
@@ -54,7 +60,8 @@ export function initWorkCanvas({ root, index, projects, reduced }) {
     if (t.cell === key) return;
     t.cell = key;
     const p = projectFor(cx, cy);
-    if (t.img.getAttribute('src') !== p.cover) t.img.src = p.cover;
+    const src = thumb(p.cover);
+    if (t.img.getAttribute('src') !== src) t.img.src = src;
     t.title.textContent = p.title;
     t.meta.textContent = `${p.client} · ${p.year}`;
     t.el.href = href(p);
