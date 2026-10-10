@@ -40,10 +40,10 @@ const loadYouTubeAPI = () =>
 export function initDJ({ root, video, reduced }) {
   const poster = `https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`;
   root.innerHTML = `
-    <div class="dj__glow" style="background-image:url(${poster})" aria-hidden="true"></div>
+    <div class="dj__glow" aria-hidden="true"></div>
     <div class="dj__frame">
       <div class="dj__host"><div id="dj-yt"></div></div>
-      <img class="dj__poster" src="${poster}" alt="" />
+      <img class="dj__poster" src="${poster}" alt="" loading="lazy" decoding="async" />
       <div class="dj__shade" aria-hidden="true"></div>
 
       <div class="dj__tools">
@@ -71,6 +71,14 @@ export function initDJ({ root, video, reduced }) {
 
   // if maxres isn't available, fall back to the smaller thumbnail
   const posterEl = root.querySelector('.dj__poster');
+  // the blurred glow is a CSS background, which can't lazy-load: set it once the section is near
+  const glowIO = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    glowIO.disconnect();
+    const g = root.querySelector('.dj__glow');
+    if (g) g.style.backgroundImage = `url(${posterEl.currentSrc || poster})`;
+  }, { rootMargin: '1500px 0px' });
+  glowIO.observe(root);
   const glowEl = root.querySelector('.dj__glow');
   posterEl.addEventListener('error', () => {
     const alt = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;

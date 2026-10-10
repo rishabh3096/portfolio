@@ -2245,11 +2245,14 @@ html.is-loading body {
   backdrop-filter: blur(10px);
   transition: transform 0.4s var(--ease);
 }
+.cs__ytplay {
+  display: grid;
+  place-items: center;
+}
+/* the triangle's visual centre sits left of its box centre, so it's nudged right a touch (optical centring) */
 .cs__ytplay::after {
   content: '';
-  display: block;
-  margin: 50% 0 0 54%;
-  transform: translate(-50%, -50%);
+  margin-left: 5px;
   border-style: solid;
   border-width: 11px 0 11px 18px;
   border-color: transparent transparent transparent #fff;

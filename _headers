@@ -1,0 +1,8 @@
+# Cloudflare caching rules (read at deploy, not published as a page).
+# Images, video and fonts rarely change: browsers keep them for a day, then refresh them in the background
+# for up to a week (a replaced image shows up within a day). HTML, CSS and JS stay revalidated on every visit
+# so site updates appear straight away.
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/vendor/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000

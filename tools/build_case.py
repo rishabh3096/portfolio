@@ -40,7 +40,7 @@ def blocks_html(c):
             rows = '\n'.join('        <div class="cs__row">' + ''.join(img(t[0], '') for t in r) + '</div>' for r in b[1])
             out.append(f'      <figure class="cs__m cs__grid">\n{rows}\n      </figure>')
         elif k == 'vm':
-            out.append(f'      <figure class="cs__m cs__film"><button class="cs__yt cs__vm" type="button" data-vimeo="{b[1]}" aria-label="Play: {html.escape(b[5])} (Vimeo)" style="background-image:url({b[2]});aspect-ratio:{b[3]}/{b[4]}"><span class="cs__ytplay" aria-hidden="true"></span></button></figure>')
+            out.append(f'      <figure class="cs__m cs__film"><button class="cs__yt cs__vm" type="button" data-vimeo="{b[1]}" aria-label="Play: {html.escape(b[5])} (Vimeo)" data-bg="{b[2]}" style="aspect-ratio:{b[3]}/{b[4]}"><span class="cs__ytplay" aria-hidden="true"></span></button></figure>')
         elif k == 'link':
             out.append(f'      <p class="cs__label"><a class="btn glass" href="{html.escape(b[1])}" target="_blank" rel="noopener">{html.escape(b[2])}</a></p>')
         elif k == 'v':
@@ -50,7 +50,7 @@ def blocks_html(c):
             poster = b[2] if len(b) > 2 else b[1].rsplit('.', 1)[0] + '.jpg'  # films sit next to a same-name poster
             out.append(f'      <figure class="cs__m cs__film"><video src="{b[1]}" poster="{poster}" controls playsinline preload="none"></video></figure>')
         elif k == 'yt':
-            out.append(f'      <figure class="cs__m cs__film"><button class="cs__yt" type="button" data-yt="{b[1]}" aria-label="Play the film (YouTube)" style="background-image:url(https://i.ytimg.com/vi/{b[1]}/hqdefault.jpg)"><span class="cs__ytplay" aria-hidden="true"></span></button></figure>')
+            out.append(f'      <figure class="cs__m cs__film"><button class="cs__yt" type="button" data-yt="{b[1]}" aria-label="Play the film (YouTube)" data-bg="https://i.ytimg.com/vi/{b[1]}/hqdefault.jpg"><span class="cs__ytplay" aria-hidden="true"></span></button></figure>')
         elif k == 'sc':
             out.append(f'      <figure class="cs__m cs__sc"><iframe title="SoundCloud" loading="lazy" allow="autoplay" src="{html.escape(b[1])}"></iframe></figure>')
         elif k == 't':

@@ -30,6 +30,18 @@ export function initCasePage() {
     loops.forEach((v) => near.observe(v));
   }
 
+  // film thumbnails are CSS backgrounds (no native lazy-loading): set them as they get near
+  const thumbs = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.style.backgroundImage = `url(${e.target.dataset.bg})`;
+        thumbs.unobserve(e.target);
+      }),
+    { rootMargin: '1600px 0px' }
+  );
+  document.querySelectorAll('.cs__yt[data-bg]').forEach((b) => thumbs.observe(b));
+
   document.querySelectorAll('.cs__yt').forEach((btn) =>
     btn.addEventListener('click', () => {
       const f = document.createElement('iframe');

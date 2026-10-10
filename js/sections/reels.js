@@ -5,6 +5,18 @@ const MUTED = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5
 
 // Vertical reels, TikTok/Reels style. Placeholders until `video` is set in js/data/social.js.
 // Real videos never autoplay on load: hover (or tap) plays, the mute badge toggles sound.
+// Browsers fetch every <video poster> as soon as the page loads; with ~40 cards that was most of the home
+// page's first download. Posters are set only when a card gets within ~2 screens.
+const posterIO = new IntersectionObserver(
+  (entries) =>
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.poster = e.target.dataset.poster;
+      posterIO.unobserve(e.target);
+    }),
+  { rootMargin: '1500px 1500px' } // wide sideways too: strip cards sit off to the right
+);
+
 export function initReels({ root, reels, reduced }) {
   reels.forEach((r, i) => {
     const n = String(i + 1).padStart(2, '0');
@@ -24,7 +36,7 @@ export function initReels({ root, reels, reduced }) {
       <div class="reel__media">
         ${
           r.video
-            ? `<video muted loop playsinline preload="none" ${r.poster ? `poster="${r.poster}"` : ''} src="${r.video}"></video>`
+            ? `<video muted loop playsinline preload="none" ${r.poster ? `data-poster="${r.poster}"` : ''} src="${r.video}"></video>`
             : `<div class="reel__ph"><span class="small dim">${r.label}</span><span class="small dim">Placeholder</span></div>`
         }
         <span class="reel__badge reel__badge--play" aria-hidden="true">${PLAY}</span>
@@ -35,6 +47,7 @@ export function initReels({ root, reels, reduced }) {
 
     const media = card.querySelector('.reel__media');
     const video = card.querySelector('video');
+    if (video?.dataset.poster) posterIO.observe(video);
     const playBadge = card.querySelector('.reel__badge--play');
     const muteBtn = card.querySelector('button.reel__badge--mute');
 
