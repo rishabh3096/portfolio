@@ -56,15 +56,15 @@ export function mountChrome(page) {
               <span class="ffield__addr">${email}</span>
               <span class="copy__hint small" aria-live="polite">Copy</span>
             </button>
-            <a class="fbtn" href="mailto:${email}">Email me <span aria-hidden="true">↗︎</span></a>
+            <a class="fbtn" href="mailto:${email}">Email me <span aria-hidden="true"><svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></span></a>
           </div>
         </div>
 
         <nav class="fglass__links" aria-label="Links and downloads">
-          <a href="${links.behance}" target="_blank" rel="noopener">Behance ↗︎</a>
-          <a href="${links.linkedin}" target="_blank" rel="noopener">LinkedIn ↗︎</a>
-          <a href="${links.instagram}" target="_blank" rel="noopener">Instagram ↗︎</a>
-          <a href="${links.soundcloud}" target="_blank" rel="noopener">SoundCloud ↗︎</a>
+          <a href="${links.behance}" target="_blank" rel="noopener">Behance <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></a>
+          <a href="${links.linkedin}" target="_blank" rel="noopener">LinkedIn <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></a>
+          <a href="${links.instagram}" target="_blank" rel="noopener">Instagram <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></a>
+          <a href="${links.soundcloud}" target="_blank" rel="noopener">SoundCloud <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></a>
           ${resume ? `<a href="${encodeURI(resume)}" download="Resume - ${config.name}.pdf">Resume ↓</a>` : ''}
           ${portfolio ? `<a href="${encodeURI(portfolio)}" download="Portfolio - ${config.name}.pdf">Portfolio PDF ↓</a>` : ''}
         </nav>

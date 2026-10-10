@@ -20,7 +20,7 @@ export function initMoments({ root, items, reduced }) {
     a.setAttribute('aria-label', `${m.alt} (opens Instagram in a new tab)`);
     a.innerHTML = `<img src="${m.img}" alt="${m.alt}" loading="lazy" decoding="async" draggable="false" />${
       m.video ? `<video muted loop playsinline preload="none" src="${m.video}" aria-hidden="true"></video>` : ''
-    }<span class="moment__go small" aria-hidden="true">↗︎</span>`;
+    }<span class="moment__go small" aria-hidden="true"><svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></span>`;
     root.append(a);
     // reels play on hover, over their cover frame
     const v = a.querySelector('video');

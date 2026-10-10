@@ -270,8 +270,8 @@ function initAbout() {
     const items = [
       config.resume && { label: 'Resume', href: config.resume, file: `Resume - ${config.name}.pdf`, arrow: '↓' },
       config.portfolio && { label: 'Portfolio PDF', href: config.portfolio, file: `Portfolio - ${config.name}.pdf`, arrow: '↓' },
-      { label: 'Behance', href: config.links.behance, arrow: '↗︎' },
-      { label: 'LinkedIn', href: config.links.linkedin, arrow: '↗︎' },
+      { label: 'Behance', href: config.links.behance, arrow: '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg>' },
+      { label: 'LinkedIn', href: config.links.linkedin, arrow: '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg>' },
     ].filter(Boolean);
     links.innerHTML = items
       .map((i) => `<a class="btn glass" href="${encodeURI(i.href)}" ${i.file ? `download="${i.file}"` : 'target="_blank" rel="noopener"'}>${i.label}&ensp;${i.arrow}</a>`)

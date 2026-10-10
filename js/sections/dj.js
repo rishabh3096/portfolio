@@ -47,7 +47,7 @@ export function initDJ({ root, video, reduced }) {
       <div class="dj__shade" aria-hidden="true"></div>
 
       <div class="dj__tools">
-        <a class="dj__chip small" href="${video.url}" target="_blank" rel="noopener">Watch on YouTube ↗︎</a>
+        <a class="dj__chip small" href="${video.url}" target="_blank" rel="noopener">Watch on YouTube <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></a>
         <button class="dj__chip dj__chip--icon" data-act="mute" type="button" aria-label="Mute">${I.sound}</button>
         <button class="dj__chip dj__chip--icon" data-act="full" type="button" aria-label="Fullscreen">${I.full}</button>
       </div>

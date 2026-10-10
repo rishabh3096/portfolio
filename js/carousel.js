@@ -53,7 +53,7 @@ export function initCarousel({ root, projects, archiveUrl, reduced }) {
     a.setAttribute('aria-label', `${d.title}${d.ext ? ' (opens in a new tab)' : ''}`);
     a.innerHTML = `
       <div class="tile__media">${
-        d.cta ? '<span class="t-lg">Full archive&nbsp;↗︎</span>' : `<img src="${d.cover}" alt="" draggable="false" loading="lazy" decoding="async" />`
+        d.cta ? '<span class="t-lg">Full archive&nbsp;<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></span>' : `<img src="${d.cover}" alt="" draggable="false" loading="lazy" decoding="async" />`
       }</div>
       <div class="tile__body">
         <div class="tile__top small">
@@ -62,7 +62,7 @@ export function initCarousel({ root, projects, archiveUrl, reduced }) {
         </div>
         <h3 class="tile__title">${d.title}</h3>
         <p class="small dim">${d.tags}</p>
-        <span class="tile__cta small">${d.cta ? 'Open Behance' : d.ext ? 'View project' : 'Read case study'} <span aria-hidden="true">↗︎</span></span>
+        <span class="tile__cta small">${d.cta ? 'Open Behance' : d.ext ? 'View project' : 'Read case study'} <span aria-hidden="true"><svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></span></span>
       </div>`;
     track.append(a);
     return { el: a, quiet: d.quiet };

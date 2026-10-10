@@ -8,6 +8,8 @@ huge image. Not published (see .assetsignore).
 import re, subprocess, pathlib, html, json
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+# ↗ as an inline SVG: iOS Safari draws the ↗ character as a colour emoji (Switzer has no glyph for it)
+ARROW = '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg>'
 
 def size(path):
     out = subprocess.run(['sips', '-g', 'pixelWidth', '-g', 'pixelHeight', str(ROOT / path)], capture_output=True, text=True).stdout
@@ -42,7 +44,8 @@ def blocks_html(c):
         elif k == 'vm':
             out.append(f'      <figure class="cs__m cs__film"><button class="cs__yt cs__vm" type="button" data-vimeo="{b[1]}" aria-label="Play: {html.escape(b[5])} (Vimeo)" data-bg="{b[2]}" style="aspect-ratio:{b[3]}/{b[4]}"><span class="cs__ytplay" aria-hidden="true"></span></button></figure>')
         elif k == 'link':
-            out.append(f'      <p class="cs__label"><a class="btn glass" href="{html.escape(b[1])}" target="_blank" rel="noopener">{html.escape(b[2])}</a></p>')
+            label = html.escape(b[2]).replace('\u2197\ufe0e', ARROW).replace('\u2197', ARROW)
+            out.append(f'      <p class="cs__label"><a class="btn glass" href="{html.escape(b[1])}" target="_blank" rel="noopener">{label}</a></p>')
         elif k == 'v':
             # silent loop: src set and played only while on screen (js/sections/casePage.js)
             out.append(f'      <figure class="cs__m"><video class="cs__loop" data-src="{b[1]}" data-poster="{b[2]}" width="{b[3]}" height="{b[4]}" muted loop playsinline preload="none" aria-hidden="true" style="--ar:{b[3]/b[4]:.4f}"></video></figure>')
