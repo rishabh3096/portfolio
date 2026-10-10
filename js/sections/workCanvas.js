@@ -71,7 +71,7 @@ export function initWorkCanvas({ root, index, projects, reduced }) {
     const ox = wrapMod(x, CW), oy = wrapMod(y, CH);
     const baseCX = Math.floor(-x / CW) - 1, baseCY = Math.floor(-y / CH) - 1;
     const cx0 = W / 2, cy0 = H / 2;
-    const R = Math.hypot(W, H) * 0.62;
+    const R = Math.hypot(W, H) * 0.56; // smaller = the curve starts closer to the centre
     let k = 0;
     for (let j = 0; j < rows; j++) {
       for (let i = 0; i < cols; i++) {
@@ -82,12 +82,12 @@ export function initWorkCanvas({ root, index, projects, reduced }) {
         // distance from the centre, normalised; the warp grows with its square
         const dx = (px + TW / 2 - cx0) / R, dy = (py + TH / 2 - cy0) / R;
         const r2 = dx * dx + dy * dy;
-        const s = reduced ? 1 : Math.max(0.35, 1 - r2 * 0.55);
-        const pull = reduced ? 0 : r2 * 0.18; // edges drawn in toward the centre (barrel)
+        const s = reduced ? 1 : Math.max(0.3, 1 - r2 * 0.72);
+        const pull = reduced ? 0 : r2 * 0.25; // edges drawn in toward the centre (barrel)
         const wx = px - dx * R * pull, wy = py - dy * R * pull;
-        const rx = reduced ? 0 : -dy * 38, ry = reduced ? 0 : dx * 38;
+        const rx = reduced ? 0 : -dy * 52, ry = reduced ? 0 : dx * 52;
         t.el.style.transform = `translate3d(${wx.toFixed(1)}px,${wy.toFixed(1)}px,0) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) scale(${s.toFixed(3)})`;
-        t.el.style.opacity = Math.max(0, Math.min(1, 1.25 - r2 * 0.9)).toFixed(3);
+        t.el.style.opacity = Math.max(0, Math.min(1, 1.3 - r2 * 1.0)).toFixed(3);
       }
     }
   };
