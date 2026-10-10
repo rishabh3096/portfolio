@@ -2272,3 +2272,18 @@ body[data-page='case'] .nav.glass {
 .touch .contact__space img {
   will-change: auto;
 }
+
+/* Touch: a tap leaves :hover stuck on the card, which kept the desktop cursor-glow layer and the hover
+   border over the video (the grey tint on phones). No hover look on touch; colour comes from playing. */
+.touch .reel__media::after {
+  display: none;
+}
+.touch .reel:hover .reel__media {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.touch .reels--strip .reel:hover .reel__media video {
+  filter: grayscale(1);
+}
+.touch .reels--strip .reel.is-playing .reel__media video {
+  filter: grayscale(0);
+}
