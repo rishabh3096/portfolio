@@ -2186,6 +2186,16 @@ html.is-loading body {
 .cs__facts dd {
   margin: 4px 0 0;
 }
+/* long project names: a smaller display size so they wrap in two or three lines, not five */
+.cs__title--long {
+  font-size: clamp(3rem, 8.4vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+}
+/* sheets for designs laid out on black */
+.cs__sheet--dark {
+  background: #000;
+}
 .cs__sheet {
   max-width: 1400px;
   margin: 0 auto;
