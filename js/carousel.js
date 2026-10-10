@@ -197,20 +197,26 @@ export function initCarousel({ root, projects, archiveUrl, reduced }) {
   window.addEventListener('pointerup', release);
   window.addEventListener('pointercancel', release);
 
-  // a drag must not open a link; clicking a side card turns it to the front first
+  // a drag must not open a link; a click opens whichever card you clicked, anywhere on it, wherever it is
+  // on the ring. Neighbouring cards overlap the edges of the one in front, so the click goes to the
+  // frontmost card under the pointer rather than whichever element the browser happened to hit.
+  let rerouting = false;
   root.addEventListener(
     'click',
     (e) => {
-      const tile = e.target.closest('.tile');
-      if (!tile) return;
+      if (rerouting) return;
       if (moved > 6) return e.preventDefault();
-      const i = tiles.findIndex((t) => t.el === tile);
-      const p = wrap(i - offset);
-      if (Math.abs(p) > 0.4) {
-        e.preventDefault();
-        target = Math.round(offset + p);
-        markInput();
-      }
+      const under = document.elementsFromPoint(e.clientX, e.clientY).map((el) => el.closest('.tile')).filter(Boolean);
+      if (!under.length) return;
+      const front = under
+        .map((el) => ({ el, d: Math.abs(wrap(tiles.findIndex((t) => t.el === el) - offset)) }))
+        .sort((a, b) => a.d - b.d)[0].el;
+      if (front === e.target.closest('.tile')) return; // the browser already hit the right card
+      e.preventDefault();
+      e.stopPropagation();
+      rerouting = true;
+      front.click(); // a real click on the right card, so page transitions and new tabs still apply
+      rerouting = false;
     },
     true
   );

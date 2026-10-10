@@ -135,7 +135,7 @@ export function initCursor() {
     // over plain buttons and links the disc steps aside and the normal pointer takes over
     c.classList.toggle('is-hidden', !kind && !!e.target.closest('a, button'));
     c.classList.toggle('is-view', kind === 'view');
-    c.classList.toggle('is-drag', kind === 'drag' || kind === 'play');
+    c.classList.toggle('is-drag', kind === 'drag' || kind === 'play' || kind === 'open');
     c.textContent = kind ? kind[0].toUpperCase() + kind.slice(1) : 'RY';
   });
   window.addEventListener('pointerdown', () => c.classList.add('is-down'));
