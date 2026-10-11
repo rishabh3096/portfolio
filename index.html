@@ -31,6 +31,10 @@
   <script type="module" src="js/main.js"></script>
 </head>
 <body data-page="home">
+  <!-- desktop: the hero's chrome background runs on a fixed layer behind the hero, the hello section and the
+       About text, under a veil that fades in after the hero; it fades out where the About text ends -->
+  <div class="home-bg" aria-hidden="true"></div>
+  <div class="home-veil" aria-hidden="true"></div>
   <main id="main">
     <!-- Hero -->
     <section class="hero" id="top" aria-label="Introduction">

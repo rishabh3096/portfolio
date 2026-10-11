@@ -143,9 +143,13 @@ function initHome() {
   // WebGL: chrome background (offscreen) -> blit, plus the glass logo that refracts it
   let flow = null;
   if (stage) {
-    flow = stage.add(new FlowBackground(stage, hero, { reduced }));
+    // desktop: drawn on a fixed full-screen layer that lasts until the end of the About text (see
+    // extendHomeBg); touch keeps it inside the hero on the anchored canvas (a fixed layer drifted there)
+    const bgEl = touch ? hero : document.querySelector('.home-bg');
+    flow = stage.add(new FlowBackground(stage, bgEl, { reduced }));
     if (showPreloader) flow.intro.value = 1; // the glass sits on the finished gradient and unfrosts onto it
-    stage.add(new HeroBlit(stage, hero));
+    const blit = stage.add(new HeroBlit(stage, bgEl));
+    if (!touch) extendHomeBg(bgEl, blit);
     Promise.all([buildLogoTextures(stage.gl, 'assets/logo.png'), liftPromise])
       .then(([tex]) => {
         const glass = stage.add(new GlassLogo(stage, logoEl, tex, { reduced }));
@@ -260,6 +264,28 @@ function initReel() {
   frame.append(video);
   ph?.remove();
   frame.querySelectorAll('.reel__tc, .reel__rec').forEach((n) => n.remove());
+}
+
+// Home, desktop: the background stays behind the hero, the hello section and the About text. A veil fades in
+// as you leave the hero (as on the About page, so text stays readable), and the whole layer fades out where
+// the About text ends; once gone it is hidden, so the GL stage stops drawing it.
+function extendHomeBg(bgEl, blit) {
+  document.documentElement.classList.add('bg-extended');
+  const veil = document.querySelector('.home-veil');
+  const about = document.getElementById('about');
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  const update = () => {
+    const vh = window.innerHeight;
+    const end = about.getBoundingClientRect().bottom; // where the About text ends, relative to the screen
+    const fade = clamp01((end - vh * 0.15) / (vh * 0.55)); // 1 until it nears the top, then out
+    const veilIn = clamp01(window.scrollY / (vh * 0.8)) * 0.72;
+    blit.fade = fade;
+    veil.style.opacity = (veilIn * fade).toFixed(3);
+    const off = fade <= 0.001;
+    if (off !== bgEl.hidden) bgEl.hidden = off; // hidden -> zero-size rect -> the stage skips it
+  };
+  gsap.ticker.add(update);
+  update();
 }
 
 function initAbout() {

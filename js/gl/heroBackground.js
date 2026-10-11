@@ -106,8 +106,9 @@ const blit = /* glsl */ `
   precision highp float;
   uniform sampler2D tBack;
   uniform vec2 uRes;
+  uniform float uFade; // 1 = fully shown; the home page fades it out where the About text ends
   void main() {
-    gl_FragColor = vec4(texture2D(tBack, gl_FragCoord.xy / uRes).rgb, 1.0);
+    gl_FragColor = vec4(texture2D(tBack, gl_FragCoord.xy / uRes).rgb * uFade, uFade);
   }
 `;
 
@@ -172,7 +173,7 @@ export class HeroBlit {
     this.program = new Program(stage.gl, {
       vertex,
       fragment: blit,
-      uniforms: { tBack: { value: null }, uRes: { value: [1, 1] } },
+      uniforms: { tBack: { value: null }, uRes: { value: [1, 1] }, uFade: { value: 1 } },
     });
     this.mesh = new Mesh(stage.gl, { geometry: stage.plane, program: this.program });
     this.mesh.setParent(stage.scene);
@@ -181,5 +182,6 @@ export class HeroBlit {
     const u = this.program.uniforms;
     u.tBack.value = stage.target.texture;
     u.uRes.value = [stage.pxW, stage.pxH];
+    u.uFade.value = this.fade ?? 1;
   }
 }
