@@ -174,8 +174,12 @@ export class HeroBlit {
       vertex,
       fragment: blit,
       uniforms: { tBack: { value: null }, uRes: { value: [1, 1] }, uFade: { value: 1 } },
+      // a backdrop: never claims depth (on the home page it is full-screen and overlaps the Selected work
+      // cards while it fades; writing depth there hid the cards) and always draws first
+      depthTest: false,
+      depthWrite: false,
     });
-    this.mesh = new Mesh(stage.gl, { geometry: stage.plane, program: this.program });
+    this.mesh = new Mesh(stage.gl, { geometry: stage.plane, program: this.program, renderOrder: -10 });
     this.mesh.setParent(stage.scene);
   }
   update(rect, stage) {
