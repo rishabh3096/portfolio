@@ -183,18 +183,27 @@ export function initHello({ root, reduced }) {
     if (visible) wake();
   }).observe(root);
 
-  // drop them in one after another, once the greeting is up
+  // drop them in one after another, once the section is properly in view (at the top of About that's
+  // straight away; on the home page it waits until you scroll down to it)
   let spawned = 0;
-  setTimeout(() => {
-    pieces.forEach((pc, i) =>
+  const drop = new IntersectionObserver(
+    ([e]) => {
+      if (!e.isIntersecting) return;
+      drop.disconnect();
       setTimeout(() => {
-        spawn(pc, 0);
-        pc.el.classList.add('is-in');
-        spawned++;
-        wake();
-      }, i * (phone ? 150 : 120))
-    );
-  }, 650);
+        pieces.forEach((pc, i) =>
+          setTimeout(() => {
+            spawn(pc, 0);
+            pc.el.classList.add('is-in');
+            spawned++;
+            wake();
+          }, i * (phone ? 150 : 120))
+        );
+      }, 450);
+    },
+    { threshold: 0.45 }
+  );
+  drop.observe(root);
 
   let rt;
   window.addEventListener('resize', () => {

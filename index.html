@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="vendor/lenis.css" />
   <link rel="stylesheet" href="css/main.css" />
   <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/matter.min.js" defer></script>
   <script type="module" src="js/main.js"></script>
 </head>
 <body data-page="home">
@@ -38,12 +39,18 @@
       </div>
 
       <div class="hero__meta small">
-        <p data-fade>Visual &amp; Motion Design</p>
-        <a class="hero__scroll glass" data-fade href="#about" data-anchor aria-label="Scroll down">
+        <span></span>
+        <a class="hero__scroll glass" data-fade href="#hello" data-anchor aria-label="Scroll down">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
         </a>
         <span></span>
       </div>
+    </section>
+
+    <!-- Hello: tools of the trade fall in and pile up (js/sections/hello.js, same as the About page) -->
+    <section class="hello" id="hello">
+      <h2 class="hello__title"><span>Hi,</span> <span>I’m Rish.</span></h2>
+      <div class="hello__pit"></div>
     </section>
 
     <!-- About statement: first person, words brighten on scroll. Edit the copy freely. -->
@@ -51,7 +58,7 @@
       <div class="intro__grid" data-depth>
         <p class="intro__label small dim">About</p>
         <div class="intro__text">
-          <p>I’m Rishabh, a visual and motion designer in London. I build brands and then set them in motion, from the first idea through launch campaigns, product films and the systems that hold it all together.</p>
+          <p>A visual and motion designer in London, I build brands and then set them in motion, from the first idea through launch campaigns, product films and the systems that hold it all together.</p>
           <p>I spent nearly five years as Lead Visual Artist at boAt, leading launches and partnerships with Netflix, Warner Bros, Disney and Dolby. Since finishing my MA at London College of Communication, I’ve been freelancing, and I’m always open to the next good project.</p>
         </div>
       </div>

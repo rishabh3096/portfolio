@@ -89,7 +89,7 @@ const fadeEls = [...document.querySelectorAll('[data-fade]')];
 if (page === 'home') initHome();
 if (page === 'about' || page === 'case') initAbout(); // case studies share the About backdrop
 if (page === 'case') initCasePage();
-if (page === 'about') initHello({ root: document.getElementById('hello'), reduced });
+if (page === 'about' || page === 'home') initHello({ root: document.getElementById('hello'), reduced });
 if (page === 'work' && !reduced) gsap.fromTo(fadeEls, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 1, stagger: 0.1, delay: 0.2, ease: 'expo.out' });
 else if (page === 'work') gsap.set(fadeEls, { opacity: 1 });
 if (page === 'work') initWorkCanvas({ root: document.getElementById('canvas'), index: document.getElementById('index'), projects, reduced });

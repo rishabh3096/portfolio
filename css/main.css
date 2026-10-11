@@ -2573,8 +2573,10 @@ body[data-page='work'] {
   position: relative;
   height: 100svh;
   min-height: 560px;
-  margin: 0 calc(var(--gutter) * -1) var(--s12);
   overflow: hidden;
+}
+.about .hello {
+  margin: 0 calc(var(--gutter) * -1) var(--s12); /* full bleed past the About page's side padding */
 }
 .hello__title {
   position: absolute;
