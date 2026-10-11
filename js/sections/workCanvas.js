@@ -84,7 +84,8 @@ export function initWorkCanvas({ root, index, projects, reduced }) {
       for (let i = 0; i < cols; i++) {
         const t = tiles[k++];
         const px = (i - 1) * CW + ox + (CW - TW) / 2; // tile's flat position
-        const py = (j - 1) * CH + oy + (CH - TH) / 2;
+        // idle float: each tile bobs a little on its own phase (by grid cell), only while drifting
+        const py = (j - 1) * CH + oy + (CH - TH) / 2 + (float ? Math.sin(clock * 0.0011 + (baseCX + i) * 1.7 + (baseCY + j) * 2.3) * 4 * float : 0);
         fill(t, baseCX + i, baseCY + j);
         // distance from the centre, normalised; the warp grows with its square
         const dx = (px + TW / 2 - cx0) / R, dy = (py + TH / 2 - cy0) / R;
@@ -157,22 +158,41 @@ export function initWorkCanvas({ root, index, projects, reduced }) {
     tx += step[0]; ty += step[1];
   });
 
-  const tick = () => {
+  const tick = (now) => {
+    clock = now;
+    // idle drift: after ~2s without input the canvas floats on its own, wandering slowly; any input stops it
+    // at once, and it nearly stops while the pointer rests on a tile so that tile doesn't slide away
+    const idle = !reduced && !dragging && now - lastInput > 2000 && !index?.classList.contains('is-open');
+    const want = idle ? (overTile ? 0.08 : 1) : 0;
+    float += (want - float) * (want > float ? 0.02 : 0.2);
+    if (float < 0.001) float = 0;
     if (!dragging) {
       if (Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05) {
         x += vx; y += vy; vx *= 0.94; vy *= 0.94; tx = x; ty = y; // flick, then glide to a stop
       } else {
         x += (tx - x) * 0.14; y += (ty - y) * 0.14; // wheel and keys ease in
       }
+      if (float) {
+        const dx = Math.cos(now * 0.00011) * 0.42 * float, dy = Math.sin(now * 0.000083 + 1.3) * 0.3 * float;
+        x += dx; y += dy; tx += dx; ty += dy;
+      }
     }
     // redraw only while something moves (40 transforms a frame for a still canvas would be wasted work)
-    if (Math.abs(x - drawnX) > 0.05 || Math.abs(y - drawnY) > 0.05 || dirty) {
+    if (Math.abs(x - drawnX) > 0.05 || Math.abs(y - drawnY) > 0.05 || dirty || float) {
       render();
       drawnX = x; drawnY = y; dirty = false;
     }
     requestAnimationFrame(tick);
   };
   let drawnX = NaN, drawnY = NaN, dirty = true;
+  let clock = 0, float = 0, lastInput = performance.now(), overTile = false;
+  const touched = () => (lastInput = performance.now());
+  ['pointerdown', 'wheel', 'keydown'].forEach((ev) => window.addEventListener(ev, touched, { passive: true }));
+  root.addEventListener('pointermove', () => dragging && touched());
+  if (fine) {
+    root.addEventListener('pointerover', (e) => (overTile = !!e.target.closest('.wc__tile')));
+    root.addEventListener('pointerleave', () => (overTile = false));
+  }
 
   layout();
   // start slightly offset so the first view isn't a hard-aligned grid
